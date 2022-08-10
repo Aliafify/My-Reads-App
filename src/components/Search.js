@@ -6,21 +6,24 @@ const Search =({books})=>{
   const [result , setResult]=useState(null);
   const query = useRef("");
 
-   function findBook (value){
+     function findBook (value){
     try{
 
       setTimeout(async()=>{
 
         const q= query.current.value.trim();
         if(q !== ""){
-        await search(q,20).then(data=>{const res=data.filter(d=>d.imageLinks&&d.authors)
+        await search(q,20).then(data=>{
+          if(!data.error){
+          const res=data.filter(d=>d.imageLinks&&d.authors)
           const boks= res.map(b=>{
             const existBook = books.filter(B=>B.id === b.id)[0];
             b.shelf = existBook?existBook.shelf:"none";
             return b
           })
           setResult(boks)
-          //console.log(res)
+        }
+        else{setResult(null)}
         }) 
         }else if(q===""){setResult(null)}
       
